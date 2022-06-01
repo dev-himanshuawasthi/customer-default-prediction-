@@ -4,4 +4,3 @@ keras
 opencv-python
 Pillow
 scikit-image
-gunicorn

@@ -1,6 +1,6 @@
 Flask
 imutils
-tensorflow
+keras
 opencv-python
 Pillow
 scikit-image

@@ -1,7 +1,7 @@
 import os
 from os import environ
 
-class config(object):
+class Config(object):
 
     DEBUG=False
     TESTING= False
@@ -17,7 +17,7 @@ class config(object):
     DEFAULT_THEME =None
 
 
-class DevelopmentConfig(config):
+class DevelopmentConfig(Config):
     DEBUG=True    
     SESSION_COOKIE_SECURE =True
 

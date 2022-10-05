@@ -72,7 +72,7 @@ def index():
                 else:
                     cust="Not Default"
 
-                string=string+ '<tr><td>'  + str(customer_data_array[i]) +'</td>' + '<td>'  + str(cust) +'</td></tr>'
+                string=string+ '<tr><td>'  + str(customer_data_array[i]) +'</td>' + '<td>'  + cust +'</td></tr>'
             string=string + '</table>'     
                 
     return render_template('index.html',string)

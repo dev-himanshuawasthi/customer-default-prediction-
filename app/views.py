@@ -1,15 +1,24 @@
 from app import app
 from flask import request, render_template
 import os
-import imutils
-from skimage.metrics import structural_similarity
-import cv2
-from PIL import Image
+import pandas as pd
+import numpy as np
+import pickle
+
+
+
+
+
 
 # Adding path to config
 app.config['INITIAL_FILE_UPLOADS']='app/static/uploads'
 app.config['EXISTING_FILE']='app/static/original'
 app.config['GENERATED_FILE']='app/static/generated'
+
+ALLOWED_EXTENSIONS= set(['csv'])
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
 
 #Route to home page
 @app.route("/",methods=["GET","POST"])
@@ -23,47 +32,41 @@ def index():
     if request.method== "POST":
         # Get uploaded image
         file_upload = request.files['file_upload']
-        filename= file_upload.filename
+        if file_upload and allowed_file(file_upload.filename):
+            filename = file_upload.filename
 
-        # Resize and save the uploaded image
-        uploaded_image = Image.open(file_upload).resize((250,160))
-        uploaded_image.save(os.path.join(app.config['INITIAL_FILE_UPLOADS'],'image.jpg'))
+            # save uploaded file
 
-        # Resize and save the original image
-        original_image = Image.open(os.path.join(app.config['EXISTING_FILE'],'image.jpg')).resize((250,160))
-        original_image.save(os.path.join(app.config['EXISTING_FILE'],'image.jpg'))
+            file_upload.save(os.path.join(app.config['INITIAL_FILE_UPLOADS'],'test.csv'))
 
-        # Read uploaded and original image as array
-        original_image=cv2.imread(os.path.join(app.config['EXISTING_FILE'],'image.jpg'))
-        uploaded_image=cv2.imread(os.path.join(app.config['INITIAL_FILE_UPLOADS'],'image.jpg'))
+            # read saved file
 
-        # Convert image into grayscale
-        original_gray= cv2.cvtColor(original_image,cv2.COLOR_BGR2GRAY)
-        tempered_gray= cv2.cvtColor(uploaded_image,cv2.COLOR_BGR2GRAY)
+            df= pd.read_csv('app/static/uploads/test.csv')
+            customer_data=df["Customer_ID"]
+            features=df.drop("Customer_ID", axis=1, inplace=True)
 
+            # load model
 
-        #find structural difference
-        (score,diff) =structural_similarity(original_gray,tempered_gray,full=True)
-        diff=(diff*255).astype("uint8")
+            model_file="app/vote_soft_model.sav"
+            loaded_model = pickle.load(open(model_file, 'rb')) 
 
+            # extract customer_id , features from csv file
+            # load data
+            customer_data_array=customer_data.to_numpy()
+            test_data_array=features.to_numpy()
 
-        # calculating threshold and contours
-        thresh =cv2.threshold(diff,0,255,cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-        cnts=cv2.findContours(thresh.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-        cnts = imutils.grab_contours(cnts)
+            # predict the results
 
+            ynew = loaded_model.predict(test_data_array)
 
-        # loop over the contours
-        for c in cnts:
-            # applying contors on image
-            (x ,y, w,h ) =cv2.boundingRect(c)
-            cv2.rectangle(original_image , (x,y),(x+w,y+h),(0,0,255),2)
-            cv2.rectangle(uploaded_image , (x,y),(x+w,y+h),(0,0,255),2)
+            # create zip file 
 
-        # save the output image if required
-        cv2.imwrite(os.path.join(app.config['GENERATED_FILE'],'image_original.jpg'),original_image)
-        cv2.imwrite(os.path.join(app.config['GENERATED_FILE'],'image_uploaded.jpg'),uploaded_image)
-        cv2.imwrite(os.path.join(app.config['GENERATED_FILE'],'image_diff.jpg'), diff)
-        cv2.imwrite(os.path.join(app.config['GENERATED_FILE'],'image_thresh.jpg'),thresh)
-        return render_template('index.html',pred=str(round(score*100,2)) + '%' + 'correct')
+            final_data=np.dstack((customer_data_array,ynew))
+
+            # create table 
+            string='<table><tr><th>Customer ID</th><th>Default Or NOT</th></tr>'
+            for i in range(10):
+                string=string+ '<td>'  + customer_data_array[i] +'</td>' + '<td>'  + ynew[i] +'</td>'
+                
+    return render_template('index.html',string)
         

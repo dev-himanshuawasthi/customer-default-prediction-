@@ -1,6 +1,6 @@
 Flask
-imutils
-opencv-python-headless
-Pillow
-scikit-image
+pandas
+numpy
+xgboost=1.6.2
 gunicorn
+pickle

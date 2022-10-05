@@ -1,7 +1,7 @@
 Flask
 pandas
 numpy
-xgboost=1.6.2
+xgboost==1.6.2
 gunicorn
 pickle
 scikit-learn

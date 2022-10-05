@@ -66,7 +66,12 @@ def index():
             # create table 
             string='<table><tr><th>Customer ID</th><th>Default Or NOT</th></tr>'
             for i in range(10):
-                string=string+ '<tr><td>'  + customer_data_array[i] +'</td>' + '<td>'  + ynew[i] +'</td></tr>'
+                if ynew[i]==1:
+                    cust="Dafault"
+                else:
+                    cust="Not Default"
+
+                string=string+ '<tr><td>'  + customer_data_array[i] +'</td>' + '<td>'  + cust +'</td></tr>'
             string=string + '</table>'     
                 
     return render_template('index.html',string)

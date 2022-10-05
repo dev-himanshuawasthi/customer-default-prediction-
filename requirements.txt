@@ -3,5 +3,5 @@ pandas
 numpy
 xgboost==1.6.2
 gunicorn
-
+lightgbm
 scikit-learn

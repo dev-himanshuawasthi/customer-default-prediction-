@@ -44,6 +44,7 @@ def index():
             df= pd.read_csv('app/static/uploads/test.csv')
             customer_data=df["Customer_ID"]
             features=df.drop("Customer_ID", axis=1)
+            features.drop("Unnamed: 0", axis=1,inplace=True)
 
             # load model
 

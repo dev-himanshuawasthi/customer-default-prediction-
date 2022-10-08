@@ -51,21 +51,14 @@
           </div>
         </form>
        	<div style="text-align: center; padding-top: 50px">
-      		<table class="table" id="myTable">
-            <thead>
-              <tr>
-                <th>Customer ID</th>
-                <th>Default Or Not</th>
-              </tr>
-              <tbody id="myTableBody" >
+      		<table >
+          
               {{pred | safe}}
 
-              </tbody>
+              
 
           </table>
-          <div class="col-md-12 text-center">
-            <ul class="pagination pagination-lg pager" id="myPager"></ul>
-        </div>
+       
      	</div>
 
       </div>
@@ -85,9 +78,7 @@
     document.getElementById('file_upload').onchange = function () {
       	document.getElementById('file_name').value = this.value.slice(12,100);
     };
-    $( "#myTableBody" ).load(function() {
-      $('#myTableBody').pageMe({pagerSelector:'#myPager',showPrevNext:true,hidePageNumbers:false,perPage:10});
-           });
+    
   </script>
 
   </body>

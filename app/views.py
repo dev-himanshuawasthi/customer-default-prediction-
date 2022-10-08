@@ -68,7 +68,7 @@ def index():
             stringg='<tr><th>Customer ID</th><th>Default Or NOT</th></tr>'
             for i in range(len(customer_data_array)):
                 if ynew[i]==1:
-                    cust="Dafault"
+                    cust="Default"
                 else:
                     cust="Not Default"
 

@@ -66,7 +66,7 @@ def index():
 
             # create table 
             stringg='<tr><th>Customer ID</th><th>Default Or NOT</th></tr>'
-            for i in range(10):
+            for i in range(len(customer_data_array)):
                 if ynew[i]==1:
                     cust="Dafault"
                 else:

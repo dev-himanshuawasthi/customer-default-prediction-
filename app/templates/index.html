@@ -7,7 +7,8 @@
 
   <!-- CSS  -->
   <link href="./static/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <link href="./static/css/pagination.css" type="text/css" rel="stylesheet"/>
+  
+  <link href="./static/css/bootstrap.min.css" type="text/css" rel="stylesheet"/>
 </head>
 
 <body>
@@ -50,7 +51,22 @@
           </div>
         </form>
        	<div style="text-align: center; padding-top: 50px">
-      		<table id="table">{{pred | safe}}</table>
+      		<table class="table" id="myTable">
+            <thead>
+              <tr>
+                <th>Customer ID</th>
+                <th>Default Or Not</th>
+              </tr>
+              <tbody id="myTableBody">
+            
+            
+            
+            <tbody>{{pred | safe}}</tbody>
+
+          </table>
+          <div class="col-md-12 text-center">
+            <ul class="pagination pagination-lg pager" id="myPager"></ul>
+        </div>
      	</div>
 
       </div>
@@ -63,21 +79,16 @@
 
   <!--  Scripts-->
   <script src="./static/js/materialize.js"></script>
-  <script src="./static/js/jquery-ui.min.js"></script>
+  <script src="./static/js/bootstrap.min.js"></script>
   <script src="./static/js/jquery-min.js"></script>
   <script src="./static/js/paging.js"></script>
   <script type="text/javascript">
     document.getElementById('file_upload').onchange = function () {
       	document.getElementById('file_name').value = this.value.slice(12,100);
     };
-    $('#table').paging({
-
-limit: 10,
-rowDisplayStyle: 'block',
-activePage: 0,
-rows: []
-
-});
+    $( "#myTableBody" ).load(function() {
+      $('#myTableBody').pageMe({pagerSelector:'#myPager',showPrevNext:true,hidePageNumbers:false,perPage:10});
+           });
   </script>
 
   </body>

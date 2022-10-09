@@ -69,10 +69,12 @@ def index():
             for i in range(len(customer_data_array)):
                 if ynew[i]==1:
                     cust="Default"
+                    table_data='<td style="color:red;">'  + cust +'</td>'
                 else:
                     cust="Not Default"
+                    table_data='<td>'  + cust +'</td>'
 
-                stringg=stringg+ '<tr><td>'  + str(customer_data_array[i]) +'</td>' + '<td>'  + cust +'</td></tr>'
+                stringg=stringg+ '<tr><td>'  + str(customer_data_array[i]) +'</td>' + table_data +'</tr>'
                 
                 
     return render_template('index.html',pred=stringg)
